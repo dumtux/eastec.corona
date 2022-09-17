@@ -315,6 +315,10 @@ static void gatts_profile_a_event_handler(esp_gatts_cb_event_t event,
 							(((uint32_t)(param->write.value[2]))<<8) |
 							(((uint32_t)(param->write.value[1]))<<0);
 					ESP_LOGI(GATTS_TAG, "LED: 0x%06x",val);
+					led_colour[0] = param->write.value[1];
+					led_colour[1] = param->write.value[2];
+					led_colour[2] = param->write.value[3];
+					xTaskNotifyGiveIndexed(Led_task_handle,0);
 					break;
 				}
 				case 0x01:
