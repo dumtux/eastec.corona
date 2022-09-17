@@ -22,15 +22,18 @@ uint8_t led_colour[3];
 
 static led_strip_t *led_strip;
 
+#define MAX_LEDS 100
+
 void led_setup_task(void* arg)
 {
-    led_strip = led_strip_init(0, 10, 1);
+    led_strip = led_strip_init(0, 10, MAX_LEDS);
     led_strip->clear(led_strip,1);
 	while(true)
 	{
 		ulTaskNotifyTake(pdTRUE,portMAX_DELAY);
-		led_strip->set_pixel(led_strip, 0, led_colour[2], led_colour[1], led_colour[0]);
-		led_strip->refresh(led_strip,1);
+		for(int i=0;i<MAX_LEDS;i++)
+			led_strip->set_pixel(led_strip, i, led_colour[2], led_colour[1], led_colour[0]);
+		led_strip->refresh(led_strip,MAX_LEDS);
 	}
 }
 
