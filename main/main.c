@@ -27,7 +27,7 @@ static led_strip_t *led_strip;
 void led_setup_task(void* arg)
 {
     led_strip = led_strip_init(0, 10, MAX_LEDS);
-    led_strip->clear(led_strip,1);
+    led_strip->clear(led_strip,MAX_LEDS);
 	while(true)
 	{
 		ulTaskNotifyTake(pdTRUE,portMAX_DELAY);
