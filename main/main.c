@@ -7,6 +7,8 @@
 #include "freertos/event_groups.h"
 #include "nvs_flash.h"
 
+#include "driver/gpio.h"
+
 #include "led_strip.h"
 
 #include "bt.h"
@@ -33,6 +35,17 @@ void led_setup_task(void* arg)
 void app_main(void)
 {
     esp_err_t ret;
+
+	gpio_config_t chg_io_conf = {
+			.pin_bit_mask = (1 << 3),
+			.mode = GPIO_MODE_OUTPUT,
+			.pull_up_en = 0,
+			.pull_down_en = 0,
+			.intr_type =GPIO_INTR_DISABLE,
+	};
+
+    gpio_config(&chg_io_conf);
+    gpio_set_level(3, 0);
 
     // Initialize NVS.
     ret = nvs_flash_init();
