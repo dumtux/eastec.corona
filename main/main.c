@@ -8,6 +8,8 @@
 #include "nvs_flash.h"
 
 #include "driver/gpio.h"
+#include "driver/adc.h"
+#include "esp_adc_cal.h"
 
 #include "led_strip.h"
 
@@ -60,11 +62,38 @@ void app_main(void)
     init_bt();
 
 
+
+    static esp_adc_cal_characteristics_t adc1_chars,adc2_chars;
+
+    esp_adc_cal_characterize(ADC_UNIT_1, ADC_ATTEN_DB_11, ADC_WIDTH_BIT_DEFAULT, 0, &adc1_chars);
+    esp_adc_cal_characterize(ADC_UNIT_2, ADC_ATTEN_DB_11, ADC_WIDTH_BIT_DEFAULT, 0, &adc2_chars);
+    ESP_ERROR_CHECK(adc1_config_width(ADC_WIDTH_BIT_DEFAULT));
+    ESP_ERROR_CHECK(adc1_config_channel_atten(ADC1_CHANNEL_0, ADC_ATTEN_DB_11));
+    ESP_ERROR_CHECK(adc1_config_channel_atten(ADC1_CHANNEL_1, ADC_ATTEN_DB_11));
+    ESP_ERROR_CHECK(adc1_config_channel_atten(ADC1_CHANNEL_4, ADC_ATTEN_DB_11));
+    ESP_ERROR_CHECK(adc2_config_channel_atten(ADC1_CHANNEL_0, ADC_ATTEN_DB_11));
+
+    TickType_t xLastWakeTime;
+    xLastWakeTime = xTaskGetTickCount();
+
     while(true)
     {
-    	measurement_t meas = {0,100,200,300,400,1};
+        uint32_t v_slr_mv = esp_adc_cal_raw_to_voltage(adc1_get_raw(ADC1_CHANNEL_0), &adc1_chars);
+        uint32_t v_bat_mv = esp_adc_cal_raw_to_voltage(adc1_get_raw(ADC1_CHANNEL_1), &adc1_chars);
+        uint32_t i_bat_mv = esp_adc_cal_raw_to_voltage(adc1_get_raw(ADC1_CHANNEL_4), &adc1_chars);
+        int adc2_raw;
+        adc2_get_raw(ADC1_CHANNEL_0,ADC_WIDTH_BIT_DEFAULT, &adc2_raw);
+        uint32_t i_slr_mv = esp_adc_cal_raw_to_voltage(adc2_raw, &adc2_chars);
+
+        //for now raw voltages
+        uint16_t i_slr = i_slr_mv /10;
+        uint16_t i_bat = i_bat_mv /10;
+        uint16_t v_slr = v_slr_mv /10;
+        uint16_t v_bat = v_bat_mv /10;
+
+    	measurement_t meas = {0,i_slr,i_bat,v_slr,v_bat,1};
     	send_notify(&meas);
-    	vTaskDelay(1000/portTICK_PERIOD_MS);
+    	vTaskDelayUntil(&xLastWakeTime,1000/portTICK_PERIOD_MS);
     }
 
     return;
