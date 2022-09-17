@@ -83,14 +83,14 @@ void app_main(void)
     {
         uint32_t v_slr_mv = esp_adc_cal_raw_to_voltage(adc1_get_raw(ADC1_CHANNEL_0), &adc1_chars);
         uint32_t v_bat_mv = esp_adc_cal_raw_to_voltage(adc1_get_raw(ADC1_CHANNEL_1), &adc1_chars);
-        uint32_t i_bat_mv = esp_adc_cal_raw_to_voltage(adc1_get_raw(ADC1_CHANNEL_4), &adc1_chars);
+        uint32_t i_slr_mv = esp_adc_cal_raw_to_voltage(adc1_get_raw(ADC1_CHANNEL_4), &adc1_chars);
         int adc2_raw;
         adc2_get_raw(ADC1_CHANNEL_0,ADC_WIDTH_BIT_DEFAULT, &adc2_raw);
-        uint32_t i_slr_mv = esp_adc_cal_raw_to_voltage(adc2_raw, &adc2_chars);
+        uint32_t i_bat_mv = esp_adc_cal_raw_to_voltage(adc2_raw, &adc2_chars);
 
         //for now raw voltages
         uint16_t i_slr = (float)i_slr_mv /(0.033*50*1000/100);
-        uint16_t i_bat = (float)(i_bat_mv - 16500) /(0.033*50*1000/100);
+        int16_t i_bat = (float)(i_bat_mv - 16500) /(0.033*50*1000/100);
         uint16_t v_slr = v_slr_mv /10;
         uint16_t v_bat = v_bat_mv /10;
 
