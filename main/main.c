@@ -22,7 +22,7 @@ uint8_t led_colour[3];
 
 static led_strip_t *led_strip;
 
-#define MAX_LEDS 100
+#define MAX_LEDS 30
 
 void led_setup_task(void* arg)
 {
