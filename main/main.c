@@ -52,6 +52,16 @@ void app_main(void)
     gpio_config(&chg_io_conf);
     gpio_set_level(3, 0);
 
+	gpio_config_t inp_io_conf = {
+			.pin_bit_mask = (1 << 6)|(1 << 7),
+			.mode = GPIO_MODE_DISABLE,
+			.pull_up_en = 0,
+			.pull_down_en = 0,
+			.intr_type =GPIO_INTR_DISABLE,
+	};
+
+    gpio_config(&inp_io_conf);
+
     // Initialize NVS.
     ret = nvs_flash_init();
     if (ret == ESP_ERR_NVS_NO_FREE_PAGES || ret == ESP_ERR_NVS_NEW_VERSION_FOUND) {
