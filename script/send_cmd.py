@@ -6,6 +6,7 @@ import struct
 import typer
 
 import datetime
+import pytz
 
 app = typer.Typer()
 
@@ -23,7 +24,7 @@ class nop_mutator:
 
 class date_mutator:
     def mutate(self,val):
-        return datetime.datetime.fromtimestamp(val)
+        return datetime.datetime.fromtimestamp(val,pytz.UTC)
 
 def notification_handler(sender, data):
     keys=("sample_in_past","date","i_slr","i_bat","v_slr","v_bat","valid")
@@ -71,7 +72,7 @@ def just_read(address:str,):
 
 @app.command()
 def sync_time(address:str,):
-    raw_cmd = struct.pack("<BI",3,int(datetime.datetime.now().timestamp()))
+    raw_cmd = struct.pack("<BI",3,int(datetime.datetime.utcnow().timestamp()))
     asyncio.run(amain(address,raw_cmd))
 
 
