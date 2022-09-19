@@ -21,5 +21,9 @@ typedef struct __attribute__((packed)){
 } measurement_t;
 
 
+void init_sample(void);
+void add_sample(const measurement_t * sample);
+void get_sample(uint32_t sample_idx, measurement_t * sample);
+
 
 #endif /* MAIN_LOG_H_ */

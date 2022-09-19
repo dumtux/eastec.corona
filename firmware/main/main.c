@@ -74,9 +74,9 @@ void app_main(void)
 
     xTaskCreate(led_setup_task, "LED_STRIP", 4000, NULL, 5, &Led_task_handle );
 
+    init_sample();
+
     init_bt();
-
-
 
     static esp_adc_cal_characteristics_t adc1_chars,adc2_chars;
 
@@ -111,6 +111,7 @@ void app_main(void)
         clock_gettime(CLOCK_REALTIME,&time);
 
     	measurement_t meas = {0,time.tv_sec,i_slr,i_bat,v_slr,v_bat,1};
+    	add_sample(&meas);
     	send_notify(&meas);
     	vTaskDelayUntil(&xLastWakeTime,1000/portTICK_PERIOD_MS);
     }

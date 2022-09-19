@@ -334,7 +334,8 @@ static void gatts_profile_a_event_handler(esp_gatts_cb_event_t event,
 							(((uint32_t)(param->write.value[3]))<<16) |
 							(((uint32_t)(param->write.value[2]))<<8) |
 							(((uint32_t)(param->write.value[1]))<<0);
-			    	measurement_t meas = {sample,0,101,201,301,401,1};
+			    	measurement_t meas;
+			    	get_sample(sample,&meas);
 			    	send_notify(&meas);
 					ESP_LOGI(GATTS_TAG, "sample %d",sample);
 					break;
