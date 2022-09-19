@@ -11,6 +11,8 @@
 #include "driver/adc.h"
 #include "esp_adc_cal.h"
 
+#include <time.h>
+
 #include "led_strip.h"
 
 #include "bt.h"
@@ -104,7 +106,11 @@ void app_main(void)
         uint16_t v_slr = v_slr_mv /10;
         uint16_t v_bat = v_bat_mv /10;
 
-    	measurement_t meas = {0,i_slr,i_bat,v_slr,v_bat,1};
+        struct timespec time;
+
+        clock_gettime(CLOCK_REALTIME,&time);
+
+    	measurement_t meas = {0,time.tv_sec,i_slr,i_bat,v_slr,v_bat,1};
     	send_notify(&meas);
     	vTaskDelayUntil(&xLastWakeTime,1000/portTICK_PERIOD_MS);
     }

@@ -8,6 +8,7 @@
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
+#include <time.h>
 #include "freertos/FreeRTOS.h"
 #include "freertos/task.h"
 #include "freertos/event_groups.h"
@@ -333,9 +334,25 @@ static void gatts_profile_a_event_handler(esp_gatts_cb_event_t event,
 							(((uint32_t)(param->write.value[3]))<<16) |
 							(((uint32_t)(param->write.value[2]))<<8) |
 							(((uint32_t)(param->write.value[1]))<<0);
-			    	measurement_t meas = {sample,101,201,301,401,1};
+			    	measurement_t meas = {sample,0,101,201,301,401,1};
 			    	send_notify(&meas);
 					ESP_LOGI(GATTS_TAG, "sample %d",sample);
+					break;
+				}
+				case 0x03:
+				{
+					uint32_t time =
+							(((uint32_t)(param->write.value[4]))<<24) |
+							(((uint32_t)(param->write.value[3]))<<16) |
+							(((uint32_t)(param->write.value[2]))<<8) |
+							(((uint32_t)(param->write.value[1]))<<0);
+
+			        struct timespec timesp;
+			        timesp.tv_sec = time;
+			        timesp.tv_nsec = 0;
+			        clock_settime(CLOCK_REALTIME,&timesp);
+
+					ESP_LOGI(GATTS_TAG, "sync_time %d",time);
 					break;
 				}
 				default:

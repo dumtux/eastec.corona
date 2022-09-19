@@ -5,6 +5,8 @@ import struct
 
 import typer
 
+import datetime
+
 app = typer.Typer()
 
 CHAR_UUID = "0000ff01-0000-1000-8000-00805f9b34fb"
@@ -19,11 +21,16 @@ class nop_mutator:
     def mutate(self,val):
         return val
 
+class date_mutator:
+    def mutate(self,val):
+        return datetime.datetime.fromtimestamp(val)
+
 def notification_handler(sender, data):
-    keys=("sample_in_past","i_slr","i_bat","v_slr","v_bat","valid")
-    vals=struct.unpack("<IHhHHB",data)
+    keys=("sample_in_past","date","i_slr","i_bat","v_slr","v_bat","valid")
+    vals=struct.unpack("<IIHhHHB",data)
     mutators = (
         nop_mutator(),
+        date_mutator(),
         scale_mutator(100),
         scale_mutator(100),
         scale_mutator(100),
@@ -61,6 +68,11 @@ def get_sample(address:str, sample: int):
 @app.command()
 def just_read(address:str,):
     asyncio.run(amain(address,None))
+
+@app.command()
+def sync_time(address:str,):
+    raw_cmd = struct.pack("<BI",3,int(datetime.datetime.now().timestamp()))
+    asyncio.run(amain(address,raw_cmd))
 
 
 @app.command()
