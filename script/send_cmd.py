@@ -9,11 +9,28 @@ app = typer.Typer()
 
 CHAR_UUID = "0000ff01-0000-1000-8000-00805f9b34fb"
 
+class scale_mutator:
+    def __init__(self,scale):
+        self.scale = scale
+    def mutate(self,val):
+        return val/self.scale
+
+class nop_mutator:
+    def mutate(self,val):
+        return val
+
 def notification_handler(sender, data):
     keys=("sample_in_past","i_slr","i_bat","v_slr","v_bat","valid")
     vals=struct.unpack("<IHhHHB",data)
-    ratio = ("I",100,100,100,100,"I")
-    vals = [val/r if r != "I" else val for val,r in zip(vals,ratio)]
+    mutators = (
+        nop_mutator(),
+        scale_mutator(100),
+        scale_mutator(100),
+        scale_mutator(100),
+        scale_mutator(100),
+        nop_mutator(),
+        )
+    vals = [r.mutate(val) for val,r in zip(vals,mutators)]
     print(dict(zip(keys,vals)))
 
 
@@ -44,7 +61,6 @@ def get_sample(address:str, sample: int):
 @app.command()
 def just_read(address:str,):
     asyncio.run(amain(address,None))
-
 
 
 @app.command()
