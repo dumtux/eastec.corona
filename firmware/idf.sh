@@ -1,4 +1,4 @@
 #!/bin/bash
 
-. ./esp-idf/export.sh
+. ../esp-idf/export.sh
 idf.py $@
