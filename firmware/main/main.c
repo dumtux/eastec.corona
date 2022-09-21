@@ -91,6 +91,8 @@ void app_main(void)
     TickType_t xLastWakeTime;
     xLastWakeTime = xTaskGetTickCount();
 
+    uint32_t log_div_counter = 0;
+
     while(true)
     {
         uint32_t v_slr_mv = esp_adc_cal_raw_to_voltage(adc1_get_raw(ADC1_CHANNEL_0), &adc1_chars);
@@ -111,7 +113,11 @@ void app_main(void)
         clock_gettime(CLOCK_REALTIME,&time);
 
     	measurement_t meas = {0,time.tv_sec,i_slr,i_bat,v_slr,v_bat,1};
-    	add_sample(&meas);
+    	if(log_div_counter == 0)
+    		add_sample(&meas);
+    	log_div_counter++;
+    	if(log_div_counter == 60*5)
+    		log_div_counter = 0;
     	send_notify(&meas);
     	vTaskDelayUntil(&xLastWakeTime,1000/portTICK_PERIOD_MS);
     }
