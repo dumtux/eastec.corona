@@ -24,6 +24,6 @@ typedef struct __attribute__((packed)){
 void init_sample(void);
 void add_sample(const measurement_t * sample);
 void get_sample(uint32_t sample_idx, measurement_t * sample);
-
+void latch_sample(void);
 
 #endif /* MAIN_LOG_H_ */
