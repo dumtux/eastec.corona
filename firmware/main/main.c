@@ -11,7 +11,7 @@
 #include "driver/adc.h"
 #include "esp_adc_cal.h"
 
-#include <time.h>
+#include <rtc.h>
 
 #include "led_strip.h"
 
@@ -74,6 +74,8 @@ void app_main(void)
 
     xTaskCreate(led_setup_task, "LED_STRIP", 4000, NULL, 5, &Led_task_handle );
 
+    init_time();
+
     init_sample();
 
     init_bt();
@@ -108,11 +110,8 @@ void app_main(void)
         uint16_t v_slr = v_slr_mv /10;
         uint16_t v_bat = v_bat_mv /10;
 
-        struct timespec time;
 
-        clock_gettime(CLOCK_REALTIME,&time);
-
-    	measurement_t meas = {0,time.tv_sec,i_slr,i_bat,v_slr,v_bat,1};
+    	measurement_t meas = {0,get_time(),i_slr,i_bat,v_slr,v_bat,1};
     	if(log_div_counter == 0)
     		add_sample(&meas);
     	log_div_counter++;
