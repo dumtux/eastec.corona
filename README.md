@@ -24,7 +24,8 @@ Requires Bluetooth peripheral or USB dongle is present on the computer.
 ```
 $ python3 -m venv devenv
 $ source devenv/bin/activate
-(devenv) $ pip install scripts/send_cmd.py --help
+(devenv) $ pip install -r scripts/requirements.txt
+(devenv) $ scripts/send_cmd.py --help
 ```
 
 NOTE: Use another terminal session to activate the development environment. If using the same session wwhere IDF is activated, it will override IDF's virtual environment.

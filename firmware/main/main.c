@@ -107,8 +107,8 @@ void app_main(void)
         //for now raw voltages
         uint16_t i_slr = (float)i_slr_mv /(0.033*50*1000/100);
         int16_t i_bat = (float)(i_bat_mv - 1650) /(0.033*50*1000/100);
-        uint16_t v_slr = v_slr_mv /10;
-        uint16_t v_bat = v_bat_mv /10;
+        uint16_t v_slr = v_slr_mv;
+        uint16_t v_bat = v_bat_mv;
 
 
     	measurement_t meas = {0,get_time(),i_slr,i_bat,v_slr,v_bat,1};
