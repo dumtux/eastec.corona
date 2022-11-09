@@ -32,10 +32,10 @@ def notification_handler(sender, data):
     mutators = (
         nop_mutator(),
         date_mutator(),
-        scale_mutator(0.1),
-        scale_mutator(0.1),
-        scale_mutator(0.1),
-        scale_mutator(0.1),
+        scale_mutator(1),
+        scale_mutator(1),
+        scale_mutator(1),
+        scale_mutator(1),
         nop_mutator(),
         )
     vals = [r.mutate(val) for val,r in zip(vals,mutators)]

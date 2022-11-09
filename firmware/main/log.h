@@ -13,10 +13,10 @@
 typedef struct __attribute__((packed)){
 	uint32_t sample_in_past; // 0 means current
 	uint32_t date; // seconds from EPOCH
-	uint16_t i_slr; //in 0.01A
-	int16_t i_bat; //in 0.01A
-	uint16_t v_slr; //in 0.01V
-	uint16_t v_bat; // in 0.01V
+	uint16_t i_slr; //in 0.001A
+	int16_t i_bat; //in 0.001A
+	uint16_t v_slr; //in 0.001V
+	uint16_t v_bat; // in 0.001V
 	uint8_t valid;
 } measurement_t;
 

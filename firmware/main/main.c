@@ -105,9 +105,9 @@ void app_main(void)
         int32_t i_bat_mv = esp_adc_cal_raw_to_voltage(adc2_raw, &adc2_chars);
 
         //for now raw voltages
-        uint16_t i_slr = (float)i_slr_mv /(0.033*50*1000/100);
-        int16_t i_bat = (float)(i_bat_mv - 1650) /(0.033*50*1000/100);
-        uint16_t v_slr = v_slr_mv;
+        uint16_t i_slr = (float)i_slr_mv /(0.033*50*1000/1000);
+        int16_t i_bat = (float)(i_bat_mv - 1650) /(0.033*50*1000/1000);
+        uint16_t v_slr = (float)v_slr_mv/(5.1f/48.1);
         uint16_t v_bat = v_bat_mv;
 
 
